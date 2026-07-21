@@ -104,6 +104,52 @@
   }
   input[type=text]:focus{border-color:var(--accent)}
 
+  /* add-mix form */
+  label.fl{display:block;font-size:12px;color:var(--hint);margin:16px 0 6px;text-transform:uppercase;letter-spacing:.04em}
+  textarea{width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;color:var(--text);font-size:15px;font-family:inherit;outline:none;resize:vertical}
+  textarea:focus{border-color:var(--accent)}
+  .two{display:flex;gap:10px;align-items:flex-end}
+  .rrow{display:flex;gap:6px;margin-bottom:8px}
+  .rrow input.rb{flex:1.3}.rrow input.rf{flex:1.3}.rrow input.rp{width:62px;text-align:center}
+  .rrow .rdel{width:40px;flex-shrink:0;background:var(--card);border:1px solid var(--line);color:#e06a6a;border-radius:10px;font-size:16px;cursor:pointer}
+  .opt.multi.on{border-color:var(--accent2);background:#16283a}
+
+  /* rating stars */
+  .rate{display:flex;align-items:center;gap:4px;background:var(--card);border-radius:14px;padding:12px 16px;margin-top:12px}
+  .rate .rlbl{font-size:12px;color:var(--hint);margin-right:6px}
+  .rate .star{font-size:26px;cursor:pointer;color:#4a4e58;line-height:1;transition:.1s}
+  .rate .star.on{color:var(--accent)}
+  .rate .star:active{transform:scale(1.2)}
+  .badge-r{background:#2a2118;color:var(--accent);border-radius:20px;padding:4px 9px;font-size:11px;font-weight:600}
+  /* configurator */
+  .cfg-add{display:flex;gap:8px;margin-bottom:8px}
+  .cfg-add input{flex:1}
+  .cfg-btn{width:52px;border:0;border-radius:12px;background:var(--accent);color:#1a1206;font-size:24px;font-weight:700;cursor:pointer}
+  .cfg-btn:active{transform:scale(.95)}
+  .cfg-hint{font-size:12px;color:var(--hint);margin-bottom:14px}
+  .ing{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+  .ing .inm{font-weight:600;flex-shrink:0}
+  .ing select{margin-left:auto;background:var(--card2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12px;font-family:inherit}
+  .ing .cat{margin-left:auto;font-size:11px;padding:4px 10px;border-radius:20px}
+  .ing .del{background:none;border:0;color:#e06a6a;font-size:20px;cursor:pointer;padding:0 2px;flex-shrink:0}
+  .pf-sour{background:#1e2f3a;color:#7fc4e6}.pf-sweet{background:#2a2118;color:#f0a04b}
+  .pf-sourSweet{background:#2f1e2a;color:#d67ab1}.pf-neutral{background:#22262f;color:#a9b0c0}
+  .pf-fresh{background:#16303a;color:#78c0dc}.pf-dessert{background:#2b241a;color:#e6c15a}
+  .pf-spicy{background:#331e18;color:#e08a5a}
+  .cfg-weight{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:14px;color:var(--hint)}
+  .cfg-weight b{font-size:18px;color:var(--text)}
+  .cfg-weight .wg{color:var(--hint)}
+  .wbtn{width:34px;height:34px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;font-size:18px;cursor:pointer;margin-left:auto}
+  .cfg-weight .wbtn:nth-of-type(2){margin-left:0}
+  .warn{background:#2b1f14;border:1px solid #5a3d1e;border-radius:12px;padding:10px 12px;font-size:13px;color:#e6b06a;margin-bottom:8px;display:flex;gap:8px}
+  .good{background:#16281c;border:1px solid #2f5a3a;color:#8fd0a5}
+  .sub-ing{padding:11px 0;border-bottom:1px solid var(--line)}
+  .sub-ing:last-child{border-bottom:0}
+  .sub-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .sub-h b{font-size:15px}
+  .tier{font-size:11px;padding:3px 9px;border-radius:20px;color:#fff}
+  .t-light{background:#3a6b4a}.t-medium{background:#8a6a2a}.t-strong{background:#8a3a3a}
+  .sub-note{font-size:12px;color:var(--hint);margin-top:6px;line-height:1.4}
   .tabbar{
     position:fixed;left:0;right:0;bottom:0;background:#13161c;border-top:1px solid var(--line);
     display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:10;
@@ -149,8 +195,54 @@
 <!-- ============ FAVORITES ============ -->
 <div id="v-fav" class="wrap hidden">
   <h1>Избранное</h1>
-  <div class="sub">Сохранённые миксы</div>
+  <div class="sub">Сохранённые и свои миксы</div>
+  <button class="btn" id="addBtn" style="margin-bottom:18px">＋ Создать свой микс</button>
+  <div class="sec-title">Мои миксы</div>
+  <div id="myBox"></div>
+  <div class="sec-title">Сохранённые</div>
   <div id="favBox"></div>
+</div>
+
+<!-- ============ ADD MIX / СВОЙ МИКС ============ -->
+<div id="v-add" class="wrap hidden">
+  <button class="back" id="addBack">‹ Назад</button>
+  <h1 id="addTitle">Свой микс</h1>
+  <div class="sub">Появится в подборе, поиске и замене наравне с готовыми</div>
+
+  <label class="fl">Название *</label>
+  <input type="text" id="a_name" placeholder="Напр. Мой арбузный">
+
+  <div class="two">
+    <div style="flex:1"><label class="fl">Время курения</label><input type="text" id="a_dur" placeholder="45–60 мин"></div>
+    <div style="width:80px"><label class="fl">Эмодзи</label><input type="text" id="a_emoji" placeholder="🍉" maxlength="2"></div>
+  </div>
+
+  <label class="fl">Крепость *</label>
+  <div class="grid grid-3" id="a_strength"></div>
+
+  <label class="fl">Вкус * (можно несколько)</label>
+  <div class="grid grid-2" id="a_profile"></div>
+
+  <label class="fl">Коротко (одна строка)</label>
+  <input type="text" id="a_short" placeholder="Сладкий, с холодком">
+
+  <label class="fl">Описание</label>
+  <textarea id="a_desc" rows="3" placeholder="Как ощущается, когда заходит…"></textarea>
+
+  <label class="fl">Теги (через запятую)</label>
+  <input type="text" id="a_tags" placeholder="лето, компания">
+
+  <label class="fl">Состав * (табак и доля)</label>
+  <div id="a_recipe"></div>
+  <button class="btn ghost" id="a_addRow" style="margin-top:8px">＋ Добавить табак</button>
+
+  <label class="fl">Как забивать (необязательно)</label>
+  <input type="text" id="a_bowl" placeholder="Чаша, напр. Фаннел">
+  <input type="text" id="a_heat" placeholder="Жар, напр. 3 угля 25мм" style="margin-top:8px">
+  <input type="text" id="a_note" placeholder="Совет" style="margin-top:8px">
+
+  <div id="a_err" class="cfg-hint" style="color:#e08a5a;margin-top:12px"></div>
+  <button class="btn" id="a_save" style="margin-top:6px">Сохранить микс</button>
 </div>
 
 <!-- ============ SEARCH BY TOBACCO ============ -->
@@ -161,6 +253,30 @@
   <div style="margin-top:12px" id="stockBox"></div>
   <div class="sec-title">Доступно сейчас</div>
   <div id="stockResult"></div>
+</div>
+
+<!-- ============ CONFIGURATOR / КОНФИГ ============ -->
+<div id="v-config" class="wrap hidden">
+  <h1>Конфигуратор</h1>
+  <div class="sub">Впиши свои вкусы — предложу пропорции, как их смешать</div>
+
+  <div class="cfg-add">
+    <input type="text" id="cfgFlavor" placeholder="Напр. малина, лимон, мята…" autocomplete="off">
+    <button class="cfg-btn" id="cfgAdd">＋</button>
+  </div>
+  <div class="cfg-hint" id="cfgHint">Добавь 2–4 вкуса и нажми «Смешать»</div>
+
+  <div id="cfgList"></div>
+
+  <div class="cfg-weight">
+    <span>Размер чаши</span>
+    <button class="wbtn" data-w="-">–</button>
+    <b id="cfgW">15</b><span class="wg">г</span>
+    <button class="wbtn" data-w="+">＋</button>
+  </div>
+
+  <button class="btn" id="cfgMix" disabled style="margin-top:14px">Смешать 🧪</button>
+  <div id="cfgResult" style="margin-top:16px"></div>
 </div>
 
 <!-- ============ GUIDE / СПРАВКА ============ -->
@@ -175,8 +291,9 @@
 
 <div class="tabbar">
   <button class="tab on" data-tab="home"><span class="ti">🎯</span>Подбор</button>
-  <button class="tab" data-tab="search"><span class="ti">🔍</span>По&nbsp;табаку</button>
-  <button class="tab" data-tab="fav"><span class="ti">⭐</span>Избранное</button>
+  <button class="tab" data-tab="config"><span class="ti">🧪</span>Конфиг</button>
+  <button class="tab" data-tab="search"><span class="ti">🔍</span>Табак</button>
+  <button class="tab" data-tab="fav"><span class="ti">⭐</span>Избран.</button>
   <button class="tab" data-tab="guide"><span class="ti">📖</span>Справка</button>
 </div>
 
@@ -208,8 +325,12 @@
   var sel = { strength:null, profile:null };
   var stock = {};   // brand -> true
   var favs  = load("hk_favs", []);
+  var custom = load("hk_custom", []);   // свои миксы
+  var ratings = load("hk_ratings", {}); // id -> 1..5
   var view  = "home";
   var backTo = "list";
+
+  function ALL(){ return MIXES.concat(custom); }
 
   function load(k,d){ try{ return JSON.parse(localStorage.getItem(k)) || d; }catch(e){ return d; } }
   function save(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
@@ -217,7 +338,7 @@
   function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function pLabel(id){ for(var i=0;i<PROFILES.length;i++) if(PROFILES[i].id===id) return PROFILES[i].lbl; return id; }
   function sLabel(id){ for(var i=0;i<STRENGTHS.length;i++) if(STRENGTHS[i].id===id) return STRENGTHS[i].lbl; return id; }
-  function byId(id){ for(var i=0;i<MIXES.length;i++) if(MIXES[i].id===id) return MIXES[i]; return null; }
+  function byId(id){ var a=ALL(); for(var i=0;i<a.length;i++) if(a[i].id===id) return a[i]; return null; }
 
   // ---------- render option buttons ----------
   function renderOpts(box, items, key){
@@ -243,12 +364,14 @@
   // ---------- mix card in list ----------
   function mixRow(m){
     var isFav = favs.indexOf(m.id) > -1;
+    var rate = ratings[m.id] ? '<span class="badge-r">'+ratings[m.id]+'★</span>' : '';
+    var mine = m.custom ? '<span class="chip" style="background:#16283a;color:#7fb4e0">свой</span>' : '';
     return '<div class="mix" data-id="'+m.id+'">'
       + '<span class="e">'+m.emoji+'</span>'
       + '<div style="flex:1;min-width:0">'
         + '<div class="n">'+esc(m.name)+'</div>'
         + '<div class="s">'+esc(m.short)+'</div>'
-        + '<div class="chips"><span class="chip time">⏱ '+esc(m.duration||"")+'</span>'+ m.tags.map(function(t){return '<span class="chip">'+esc(t)+'</span>';}).join("") +'</div>'
+        + '<div class="chips">'+mine+rate+'<span class="chip time">⏱ '+esc(m.duration||"")+'</span>'+ (m.tags||[]).map(function(t){return '<span class="chip">'+esc(t)+'</span>';}).join("") +'</div>'
       + '</div>'
       + '<span class="fav'+(isFav?' on':'')+'" data-fav="'+m.id+'">'+(isFav?'★':'☆')+'</span>'
       + '</div>';
@@ -277,11 +400,11 @@
   }
 
   function showList(){
-    var found = MIXES.filter(match);
+    var found = ALL().filter(match);
     // фолбэк: если по точному совпадению пусто — расширяем по крепости
     var fallback = false;
     if(!found.length){
-      found = MIXES.filter(function(m){ return m.strength === sel.strength; });
+      found = ALL().filter(function(m){ return m.strength === sel.strength; });
       fallback = true;
     }
     $("listTitle").textContent = sLabel(sel.strength) + " · " + pLabel(sel.profile);
@@ -324,26 +447,159 @@
         + m.tags.map(function(t){return '<span class="chip">'+esc(t)+'</span>';}).join("")
       + '</div>'
       + '<div class="card" style="line-height:1.55">'+esc(m.desc)+'</div>'
+      + '<div class="rate" id="rateBox" data-rid="'+m.id+'"><span class="rlbl">Оценка</span>'
+        + [1,2,3,4,5].map(function(n){ return '<span class="star'+((ratings[m.id]||0)>=n?' on':'')+'" data-star="'+n+'">★</span>'; }).join("")
+        + '</div>'
       + '<div class="dur"><span class="dur-ic">⏱</span><div><div class="dur-lbl">Курится примерно</div><div class="dur-val">'+esc(m.duration||"—")+'</div></div></div>'
       + '<div class="sec-title" style="margin-top:18px">Состав и пропорции</div>'
       + '<div class="card">'+bar+rows+'</div>'
+      + '<button class="btn ghost" id="subBtn" style="margin-bottom:12px">🔄 Чем заменить табаки</button>'
+      + '<div id="subBox" class="hidden">'+subHtml(m)+'</div>'
       + '<div class="sec-title">Как забивать</div>'
       + '<div class="card">'
         + '<div class="kv"><b>Чаша</b><span>'+esc(m.bowl)+'</span></div>'
         + '<div class="kv"><b>Жар</b><span>'+esc(m.heat)+'</span></div>'
         + '<div class="kv"><b>Время</b><span>'+esc(m.duration||"—")+'</span></div>'
-        + '<div class="kv"><b>Совет</b><span>'+esc(m.note)+'</span></div>'
-      + '</div>';
+        + '<div class="kv"><b>Совет</b><span>'+esc(m.note||"—")+'</span></div>'
+      + '</div>'
+      + (m.custom ? '<button class="btn ghost" id="delBtn" style="margin-top:14px;color:#e06a6a">🗑 Удалить свой микс</button>' : '');
 
     $("detBox").onclick = function(e){
       var f = e.target.closest("[data-fav]");
-      if(f) toggleFav(f.dataset.fav);
+      if(f){ toggleFav(f.dataset.fav); return; }
+      var st = e.target.closest("[data-star]");
+      if(st){ setRating(m.id, +st.dataset.star); return; }
+      var s = e.target.closest("#subBtn");
+      if(s){
+        haptic();
+        var box = $("subBox"), hidden = box.classList.toggle("hidden");
+        s.textContent = hidden ? "🔄 Чем заменить табаки" : "🔽 Скрыть замены";
+        return;
+      }
+      var d = e.target.closest("#delBtn");
+      if(d) deleteCustom(m.id);
     };
     go("detail");
   }
 
-  // ---------- favorites ----------
+  function setRating(id, n){
+    haptic('medium');
+    if(ratings[id] === n) delete ratings[id]; else ratings[id] = n; // повторный тап той же звезды снимает
+    save("hk_ratings", ratings);
+    // обновить звёзды на месте
+    var box = $("rateBox");
+    if(box) Array.prototype.forEach.call(box.querySelectorAll(".star"), function(s){
+      s.classList.toggle("on", (ratings[id]||0) >= +s.dataset.star);
+    });
+  }
+
+  function deleteCustom(id){
+    haptic('heavy');
+    var ok = true;
+    try{ ok = tg ? true : confirm("Удалить этот микс?"); }catch(e){}
+    if(tg && tg.showConfirm){
+      tg.showConfirm("Удалить этот микс?", function(yes){ if(yes) doDelete(id); });
+    } else if(ok){ doDelete(id); }
+  }
+  function doDelete(id){
+    custom = custom.filter(function(m){ return m.id !== id; });
+    save("hk_custom", custom);
+    var fi = favs.indexOf(id); if(fi>-1){ favs.splice(fi,1); save("hk_favs",favs); }
+    delete ratings[id]; save("hk_ratings", ratings);
+    showFav(); go("fav");
+  }
+
+  // ---------- substitution / замена брендов ----------
+  function familyOf(flavor){
+    var F = window.FAMILIES || {}; var s = flavor.toLowerCase();
+    var keys = Object.keys(F);
+    for(var i=0;i<keys.length;i++){
+      var arr = F[keys[i]];
+      for(var j=0;j<arr.length;j++){ if(s.indexOf(arr[j])>-1) return keys[i]; }
+    }
+    return null;
+  }
+  function coversFam(brand, fam){
+    if(!fam) return true;
+    var C = window.BRAND_COVERS || {};
+    var def = ["ягода","цитрус","дыняарбуз","тропик","виноград","яблокогруша","свежесть","напиток"];
+    var cov = C[brand] || def;
+    return cov.indexOf(fam) > -1;
+  }
+  function brandTier(b){ var B=window.BRANDS||{}; return (B[b]||{}).tier || "medium"; }
+  function isDark(b){ var B=window.BRANDS||{}; return !!(B[b]||{}).dark; }
+
+  function subHtml(m){
+    var BRANDS = window.BRANDS || {};
+    var TL = window.TIER_LABEL || {light:"лёгкий",medium:"средний",strong:"крепкий"};
+    var allBrands = Object.keys(BRANDS);
+
+    var intro = '<div class="warn good" style="margin-bottom:10px"><span>ℹ️</span><span>'
+      + 'Меняй на бренд той же крепости. Другой бренд того же вкуса — почти всегда ок, только подстрой количество под насыщенность.</span></div>';
+
+    // по каждому табаку
+    var perIng = m.recipe.map(function(r){
+      var fam = familyOf(r.flavor);
+      var tier = brandTier(r.brand);
+      var alts = allBrands.filter(function(b){
+        return b !== r.brand && brandTier(b) === tier && coversFam(b, fam);
+      }).slice(0,5);
+
+      var chips = alts.length
+        ? '<div class="chips" style="margin-top:6px">' + alts.map(function(b){
+            return '<span class="chip">'+esc(b)+'</span>'; }).join("") + '</div>'
+        : '<div class="sub-note">Аналог той же крепости не нашёл — возьми любой бренд того же вкуса и подстрой количество.</div>';
+
+      var darkNote = isDark(r.brand)
+        ? '<div class="sub-note">Тёмный лист — если заменишь на такой же, дай меньше жара и дольше прогрев.</div>' : '';
+
+      return '<div class="sub-ing">'
+        + '<div class="sub-h"><b>'+esc(r.flavor)+'</b>'
+          + '<span class="tier t-'+tier+'">'+esc(r.brand)+' · '+TL[tier]+'</span></div>'
+        + chips + darkNote
+      + '</div>';
+    }).join("");
+
+    // весь микс одним брендом
+    var fams = [];
+    m.recipe.forEach(function(r){ var f=familyOf(r.flavor); if(f && fams.indexOf(f)<0) fams.push(f); });
+    var mixTier = m.strength; // light/medium/strong совпадает с tier
+    var full = allBrands.filter(function(b){ return fams.every(function(f){ return coversFam(b,f); }); });
+    full.sort(function(a,b){ return (brandTier(b)===mixTier?1:0)-(brandTier(a)===mixTier?1:0); });
+
+    var oneBrand;
+    if(!fams.length){
+      oneBrand = '<div class="sub-note">Вкусы нестандартные — одним брендом собрать сложно.</div>';
+    } else if(full.length){
+      oneBrand = '<div class="chips" style="margin-top:6px">' + full.slice(0,4).map(function(b){
+        var match = brandTier(b)===mixTier;
+        return '<span class="chip'+(match?' time':'')+'">'+esc(b)+' · '+TL[brandTier(b)]+'</span>';
+      }).join("") + '</div>'
+      + '<div class="sub-note">Отмеченные — той же крепости, что и микс. Вкус найдётся в линейке, ищи ближайший.</div>';
+    } else {
+      // никто не покрывает всё — топ по покрытию
+      var ranked = allBrands.map(function(b){
+        return {b:b, n:fams.filter(function(f){return coversFam(b,f);}).length};
+      }).sort(function(a,b){ return b.n-a.n; }).slice(0,3);
+      oneBrand = '<div class="chips" style="margin-top:6px">' + ranked.map(function(o){
+        return '<span class="chip">'+esc(o.b)+' ('+o.n+'/'+fams.length+')</span>'; }).join("") + '</div>'
+      + '<div class="sub-note">Полностью одним брендом не собрать — эти закроют большинство вкусов.</div>';
+    }
+
+    return intro
+      + '<div class="sec-title" style="margin-top:4px">Аналоги по каждому табаку</div>'
+      + '<div class="card">'+perIng+'</div>'
+      + '<div class="sec-title">Весь микс на одном бренде</div>'
+      + '<div class="card">'+oneBrand+'</div>';
+  }
+
+  // ---------- favorites + свои миксы ----------
   function showFav(){
+    $("myBox").innerHTML = custom.length
+      ? custom.slice().reverse().map(mixRow).join("")
+      : '<div class="empty" style="padding:24px">Своих миксов пока нет.<br>Создай первый кнопкой выше.</div>';
+    bindList($("myBox"), "fav");
+
     var list = favs.map(byId).filter(Boolean);
     $("favBox").innerHTML = list.length
       ? list.map(mixRow).join("")
@@ -354,7 +610,7 @@
   // ---------- search by tobacco ----------
   function allBrands(){
     var seen = {}, out = [];
-    MIXES.forEach(function(m){ m.recipe.forEach(function(r){
+    ALL().forEach(function(m){ m.recipe.forEach(function(r){
       if(!seen[r.brand]){ seen[r.brand] = 1; out.push(r.brand); }
     });});
     return out.sort();
@@ -366,7 +622,7 @@
       if(!q) return true;
       if(b.toLowerCase().indexOf(q) > -1) return true;
       // ищем и по вкусам этого бренда
-      return MIXES.some(function(m){ return m.recipe.some(function(r){
+      return ALL().some(function(m){ return m.recipe.some(function(r){
         return r.brand === b && r.flavor.toLowerCase().indexOf(q) > -1;
       });});
     });
@@ -382,7 +638,7 @@
       return;
     }
     var ready = [], partial = [];
-    MIXES.forEach(function(m){
+    ALL().forEach(function(m){
       var have = m.recipe.filter(function(r){ return stock[r.brand]; }).length;
       if(have === m.recipe.length) ready.push(m);
       else if(have >= m.recipe.length - 1 && have > 0) partial.push(m);
@@ -460,20 +716,271 @@
     guideBuilt = true;
   }
 
+  // ---------- configurator ----------
+  var cfg = [];            // [{flavor, profile, manual}]
+  var cfgW = 15;           // bowl weight, g
+  var PROF_LABEL = {sour:"Кислый",sweet:"Сладкий",sourSweet:"Кисло-сладкий",neutral:"Нейтральный",fresh:"Свежий",dessert:"Десертный",spicy:"Пряный"};
+  var BASE_PROF = ["sweet","dessert","sourSweet","neutral"];
+
+  function detectProfile(name){
+    var db = window.FLAVOR_DB || {};
+    var s = name.toLowerCase().trim();
+    if(db[s]) return db[s];
+    // подстрока: "малина спелая" -> "малина"
+    var keys = Object.keys(db);
+    for(var i=0;i<keys.length;i++){ if(s.indexOf(keys[i])>-1 || keys[i].indexOf(s)>-1) return db[keys[i]]; }
+    return null;
+  }
+
+  function cfgAdd(){
+    var name = $("cfgFlavor").value.trim();
+    if(!name) return;
+    haptic();
+    var p = detectProfile(name);
+    cfg.push({ flavor:name, profile:p||"sweet", manual:!p });
+    $("cfgFlavor").value = "";
+    renderCfg();
+  }
+
+  function renderCfg(){
+    $("cfgList").innerHTML = cfg.map(function(it,idx){
+      var catHtml = it.manual
+        ? '<select data-idx="'+idx+'">' + Object.keys(PROF_LABEL).map(function(k){
+            return '<option value="'+k+'"'+(k===it.profile?' selected':'')+'>'+PROF_LABEL[k]+'</option>';
+          }).join("") + '</select>'
+        : '<span class="cat pf-'+it.profile+'">'+PROF_LABEL[it.profile]+'</span>';
+      return '<div class="ing"><span class="inm">'+esc(it.flavor)+'</span>'+catHtml
+        +'<button class="del" data-del="'+idx+'">✕</button></div>';
+    }).join("");
+    $("cfgMix").disabled = cfg.length < 1;
+    $("cfgHint").textContent = cfg.length
+      ? (cfg.length + " " + (cfg.length===1?"вкус":cfg.length<5?"вкуса":"вкусов") + " · жёлтые можно уточнить вручную")
+      : "Добавь 2–4 вкуса и нажми «Смешать»";
+  }
+
+  // движок пропорций
+  function computeMix(items){
+    var n = items.length;
+    var W = {sweet:3,dessert:3,sourSweet:2.6,neutral:2.2,sour:2,spicy:1.3,fresh:1.3};
+    var pct;
+    if(n===1){ pct=[100]; }
+    else {
+      var raw = items.map(function(it){ return W[it.profile]||2; });
+      var sum = raw.reduce(function(a,b){return a+b;},0);
+      pct = raw.map(function(w){ return w/sum*100; });
+      var hasBase = items.some(function(it){ return BASE_PROF.indexOf(it.profile)>-1; });
+      if(hasBase){
+        var CAP = {fresh:25, spicy:20, sour:40};
+        var excess = 0;
+        pct = pct.map(function(p,i){ var c=CAP[items[i].profile]; if(c&&p>c){ excess+=p-c; return c; } return p; });
+        var baseIdx = items.map(function(_,i){return i;}).filter(function(i){ return BASE_PROF.indexOf(items[i].profile)>-1; });
+        var baseSum = baseIdx.reduce(function(a,i){ return a+pct[i]; },0) || 1;
+        baseIdx.forEach(function(i){ pct[i]+= excess*(pct[i]/baseSum); });
+      }
+    }
+    // округление до 5, минимум 5, сумма 100
+    var r = pct.map(function(p){ return Math.max(5, Math.round(p/5)*5); });
+    var guard = 0;
+    while(r.reduce(function(a,b){return a+b;},0)!==100 && guard++<50){
+      var diff = 100 - r.reduce(function(a,b){return a+b;},0);
+      if(diff>0){ var mx=0; for(var i=1;i<r.length;i++) if(r[i]>r[mx]) mx=i; r[mx]+=5; }
+      else { var mn=-1; for(var i=0;i<r.length;i++) if(r[i]>5 && (mn<0||r[i]>r[mn])) mn=i; if(mn<0) break; r[mn]-=5; }
+    }
+    return r;
+  }
+
+  function cfgMix(){
+    if(!cfg.length) return;
+    haptic('medium');
+    var items = cfg.slice();
+    var pct = computeMix(items);
+    // отсортировать по доле (база сверху)
+    var order = items.map(function(it,i){ return {it:it, p:pct[i]}; }).sort(function(a,b){ return b.p-a.p; });
+
+    var bar = '<div class="bar">' + order.map(function(o,i){
+      return '<i style="width:'+o.p+'%;background:'+COLORS[i%COLORS.length]+'"></i>';
+    }).join("") + '</div>';
+
+    var rows = order.map(function(o,i){
+      var g = Math.round(o.p/100*cfgW*10)/10;
+      return '<div class="row"><div>'
+        + '<div class="flav">'+esc(o.it.flavor)+'</div>'
+        + '<div class="brand pf-'+o.it.profile+'" style="display:inline-block;padding:2px 8px;border-radius:20px;margin-top:4px">'+PROF_LABEL[o.it.profile]+'</div></div>'
+        + '<div style="text-align:right;margin-left:12px"><div class="pct">'+o.p+'%</div>'
+        + '<div style="font-size:12px;color:var(--hint)">'+g+' г</div></div></div>';
+    }).join("");
+
+    // предсказанный профиль
+    var byProf = {};
+    order.forEach(function(o){ byProf[o.it.profile]=(byProf[o.it.profile]||0)+o.p; });
+    var domin = Object.keys(byProf).sort(function(a,b){ return byProf[b]-byProf[a]; });
+    var profChips = domin.filter(function(p){ return byProf[p]>=25; }).slice(0,2)
+      .map(function(p){ return '<span class="chip">'+PROF_LABEL[p]+'</span>'; }).join("");
+
+    // предупреждения и советы
+    var warns = [];
+    var freshN = items.filter(function(it){return it.profile==="fresh";}).length;
+    var sourN  = items.filter(function(it){return it.profile==="sour";}).length;
+    var sweetN = items.filter(function(it){return BASE_PROF.indexOf(it.profile)>-1 && it.profile!=="neutral";}).length;
+    var spicyN = items.filter(function(it){return it.profile==="spicy";}).length;
+    var hasBase = items.some(function(it){ return BASE_PROF.indexOf(it.profile)>-1; });
+
+    if(items.length===1) warns.push(["💡","Один вкус можно курить соло, но добавь кислый или свежий акцент — будет глубже."]);
+    if(items.length>4) warns.push(["⚠️","Больше 4 компонентов — вкусы могут смешаться в «кашу». Оставь 3–4 самых важных."]);
+    if(freshN>=2) warns.push(["❄️","Два свежих/ментоловых — получится очень холодно. Хватит одного."]);
+    if(sourN>=2) warns.push(["🍋","Два кислых компонента — вкус выйдет резким. Ок для любителей кислого, иначе убери один."]);
+    if(!hasBase) warns.push(["⚠️","Нет сладкой/фруктовой базы — микс может быть плоским. Добавь фрукт или десерт как основу."]);
+    if(sweetN>=1 && sourN===0 && freshN===0 && items.length>1) warns.push(["🍯","Микс сладкий без кислоты и свежести — приторно. Капля лимона/мяты оживит."]);
+    if(spicyN>=1) warns.push(["🌶","Пряности держи в меньшинстве — их доля намеренно ограничена."]);
+    if(hasBase && sourN>=1 && freshN>=1 && items.length<=4) warns.push(["✅","Хороший баланс: база + кислинка + свежесть. Классический сбалансированный профиль.", true]);
+
+    var warnHtml = warns.map(function(w){
+      return '<div class="warn'+(w[2]?" good":"")+'"><span>'+w[0]+'</span><span>'+esc(w[1])+'</span></div>';
+    }).join("");
+
+    $("cfgResult").innerHTML =
+      '<div class="sec-title">Рекомендуемая забивка</div>'
+      + '<div class="chips" style="margin-bottom:10px">'+ (profChips||'<span class="chip">микс</span>') +'<span class="chip time">Всего '+cfgW+' г</span></div>'
+      + '<div class="card">'+bar+rows+'</div>'
+      + warnHtml
+      + '<div class="sec-title">Как забивать</div>'
+      + '<div class="card">'
+        + '<div class="kv"><b>Чаша</b><span>Фаннел или классик</span></div>'
+        + '<div class="kv"><b>Жар</b><span>3 угля 25мм, калауд для сиропных табаков</span></div>'
+        + '<div class="kv"><b>Порядок</b><span>Разрыхли табаки, перемешай в отдельной ёмкости в указанных долях, забивай воздушно</span></div>'
+      + '</div>';
+    // прокрутить к результату
+    $("cfgResult").scrollIntoView({behavior:"smooth", block:"nearest"});
+  }
+
+  $("cfgAdd").onclick = cfgAdd;
+  $("cfgFlavor").addEventListener("keydown", function(e){ if(e.key==="Enter") cfgAdd(); });
+  $("cfgList").addEventListener("click", function(e){
+    var d = e.target.closest("[data-del]");
+    if(d){ haptic(); cfg.splice(+d.dataset.del,1); renderCfg(); }
+  });
+  $("cfgList").addEventListener("change", function(e){
+    var s = e.target.closest("select[data-idx]");
+    if(s){ cfg[+s.dataset.idx].profile = s.value; }
+  });
+  $("cfgMix").onclick = cfgMix;
+  document.querySelectorAll(".cfg-weight .wbtn").forEach(function(b){
+    b.onclick = function(){
+      haptic();
+      cfgW += (b.dataset.w==="+"?5:-5);
+      if(cfgW<5) cfgW=5; if(cfgW>30) cfgW=30;
+      $("cfgW").textContent = cfgW;
+    };
+  });
+  renderCfg();
+
+  // ---------- add mix / свой микс ----------
+  var aSel = { strength:null, profile:[] };
+  var addBuilt = false;
+
+  function buildAddForm(){
+    if(addBuilt) return;
+    $("a_strength").innerHTML = STRENGTHS.map(function(it){
+      return '<div class="opt" data-as="'+it.id+'"><span class="ico">'+it.ico+'</span><span class="lbl">'+it.lbl+'</span></div>';
+    }).join("");
+    $("a_profile").innerHTML = PROFILES.map(function(it){
+      return '<div class="opt multi" data-ap="'+it.id+'"><span class="ico">'+it.ico+'</span><span class="lbl">'+it.lbl+'</span></div>';
+    }).join("");
+    $("a_strength").addEventListener("click", function(e){
+      var el=e.target.closest("[data-as]"); if(!el) return; haptic();
+      aSel.strength = (aSel.strength===el.dataset.as)?null:el.dataset.as;
+      Array.prototype.forEach.call(this.children, function(c){ c.classList.toggle("on", c.dataset.as===aSel.strength); });
+    });
+    $("a_profile").addEventListener("click", function(e){
+      var el=e.target.closest("[data-ap]"); if(!el) return; haptic();
+      var p=el.dataset.ap, i=aSel.profile.indexOf(p);
+      if(i>-1) aSel.profile.splice(i,1); else aSel.profile.push(p);
+      el.classList.toggle("on", aSel.profile.indexOf(p)>-1);
+    });
+    addRecipeRow(); addRecipeRow(); // две строки по умолчанию
+    addBuilt = true;
+  }
+
+  function addRecipeRow(brand, flavor, parts){
+    var div = document.createElement("div");
+    div.className = "rrow";
+    div.innerHTML = '<input class="rb" type="text" placeholder="Бренд" value="'+(brand?esc(brand):"")+'">'
+      + '<input class="rf" type="text" placeholder="Вкус" value="'+(flavor?esc(flavor):"")+'">'
+      + '<input class="rp" type="number" placeholder="%" value="'+(parts||"")+'">'
+      + '<button class="rdel" type="button">✕</button>';
+    div.querySelector(".rdel").onclick = function(){ haptic(); div.remove(); };
+    $("a_recipe").appendChild(div);
+  }
+
+  function openAdd(){
+    buildAddForm();
+    // сброс
+    aSel = { strength:null, profile:[] };
+    ["a_name","a_short","a_desc","a_tags","a_dur","a_emoji","a_bowl","a_heat","a_note"].forEach(function(id){ $(id).value=""; });
+    $("a_err").textContent="";
+    Array.prototype.forEach.call($("a_strength").children, function(c){ c.classList.remove("on"); });
+    Array.prototype.forEach.call($("a_profile").children, function(c){ c.classList.remove("on"); });
+    $("a_recipe").innerHTML=""; addRecipeRow(); addRecipeRow();
+    go("add");
+  }
+
+  function saveMix(){
+    var name = $("a_name").value.trim();
+    var rows = Array.prototype.map.call($("a_recipe").children, function(r){
+      return { brand:r.querySelector(".rb").value.trim(), flavor:r.querySelector(".rf").value.trim(), parts:parseFloat(r.querySelector(".rp").value)||0 };
+    }).filter(function(x){ return x.brand && x.flavor && x.parts>0; });
+
+    var err = "";
+    if(!name) err = "Впиши название.";
+    else if(!aSel.strength) err = "Выбери крепость.";
+    else if(!aSel.profile.length) err = "Выбери хотя бы один вкус.";
+    else if(rows.length < 2) err = "Добавь минимум 2 табака с долей больше 0.";
+    if(err){ $("a_err").textContent = err; haptic('heavy'); return; }
+
+    var tags = $("a_tags").value.split(",").map(function(t){return t.trim();}).filter(Boolean);
+    tags.unshift("свой");
+    var m = {
+      id: "c" + Date.now(),
+      custom: true,
+      name: name,
+      strength: aSel.strength,
+      profile: aSel.profile.slice(),
+      emoji: $("a_emoji").value.trim() || "🧪",
+      short: $("a_short").value.trim() || "Свой микс",
+      desc: $("a_desc").value.trim() || "Собственный рецепт.",
+      duration: $("a_dur").value.trim() || "—",
+      tags: tags,
+      recipe: rows,
+      bowl: $("a_bowl").value.trim() || "Классик / Фаннел",
+      heat: $("a_heat").value.trim() || "3 угля 25мм",
+      note: $("a_note").value.trim() || "—"
+    };
+    custom.push(m);
+    save("hk_custom", custom);
+    haptic('medium');
+    backTo = "fav";
+    openDetail(m.id);
+  }
+
+  $("addBtn").onclick = function(){ haptic(); openAdd(); };
+  $("addBack").onclick = function(){ showFav(); go("fav"); };
+  $("a_addRow").onclick = function(){ haptic(); addRecipeRow(); };
+  $("a_save").onclick = saveMix;
+
   // ---------- navigation ----------
-  var VIEWS = ["home","list","detail","fav","search","guide"];
+  var VIEWS = ["home","list","detail","fav","search","guide","config","add"];
   function go(v){
     view = v;
     VIEWS.forEach(function(x){ $("v-"+x).classList.toggle("hidden", x !== v); });
     window.scrollTo(0,0);
     if(tg && tg.BackButton){
-      if(v === "home" || v === "fav" || v === "search" || v === "guide") tg.BackButton.hide();
-      else tg.BackButton.show();
+      if(v === "detail" || v === "list") tg.BackButton.show();
+      else tg.BackButton.hide();
     }
+    var tabFor = { home:"home", list:"home", detail:(backTo==="fav"?"fav":backTo==="search"?"search":"home"),
+                   fav:"fav", add:"fav", search:"search", guide:"guide", config:"config" };
     document.querySelectorAll(".tab").forEach(function(t){
-      var active = (t.dataset.tab === v) || (v === "list" && t.dataset.tab === "home")
-                || (v === "detail" && t.dataset.tab === "home" && backTo === "list");
-      t.classList.toggle("on", active);
+      t.classList.toggle("on", t.dataset.tab === (tabFor[v]||v));
     });
   }
   function goBack(){
@@ -495,9 +1002,9 @@
   $("goBtn").onclick = function(){ haptic('medium'); showList(); };
   $("randBtn").onclick = function(){
     haptic('heavy');
-    var pool = MIXES;
-    if(sel.strength) pool = MIXES.filter(function(m){ return m.strength === sel.strength; });
-    if(!pool.length) pool = MIXES;
+    var pool = ALL();
+    if(sel.strength) pool = pool.filter(function(m){ return m.strength === sel.strength; });
+    if(!pool.length) pool = ALL();
     backTo = "home";
     openDetail(pool[Math.floor(Math.random()*pool.length)].id);
   };
