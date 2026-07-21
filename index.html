@@ -57,6 +57,30 @@
 
   .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
   .chip{background:var(--card2);color:var(--hint);border-radius:20px;padding:4px 10px;font-size:11px}
+  .chip.time{background:#2a2118;color:var(--accent);font-weight:600}
+
+  .dur{display:flex;align-items:center;gap:12px;background:#2a2118;border:1px solid #4a3a22;
+       border-radius:14px;padding:12px 16px;margin-top:12px}
+  .dur-ic{font-size:24px}
+  .dur-lbl{font-size:11px;color:var(--hint);text-transform:uppercase;letter-spacing:.05em}
+  .dur-val{font-size:18px;font-weight:800;color:var(--accent)}
+
+  .acc{background:var(--card);border-radius:14px;margin-bottom:8px;overflow:hidden}
+  .acc-h{display:flex;align-items:center;gap:10px;padding:14px;cursor:pointer}
+  .acc-h .ae{font-size:22px}
+  .acc-h .an{font-weight:700;font-size:15px}
+  .acc-h .at{font-size:11px;color:var(--hint);margin-top:1px}
+  .acc-h .arr{margin-left:auto;color:var(--hint);transition:.2s;font-size:13px}
+  .acc.open .arr{transform:rotate(90deg)}
+  .acc-b{max-height:0;overflow:hidden;transition:max-height .25s ease}
+  .acc-b-in{padding:0 14px 14px}
+  .acc-b .kv{align-items:flex-start}
+  .acc-b .kv b{color:var(--accent);min-width:96px}
+  .acc-h .thumb{width:44px;height:34px;flex-shrink:0}
+  .acc-h .thumb svg{width:100%;height:100%;display:block}
+  .bowl-img{background:#14161c;border-radius:12px;padding:8px;margin-bottom:12px;text-align:center}
+  .bowl-img svg{width:150px;height:112px}
+  .bowl-img .cap{font-size:10px;color:var(--hint);margin-top:2px;text-transform:uppercase;letter-spacing:.05em}
 
   .card{background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px}
   .row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
@@ -139,10 +163,21 @@
   <div id="stockResult"></div>
 </div>
 
+<!-- ============ GUIDE / СПРАВКА ============ -->
+<div id="v-guide" class="wrap hidden">
+  <h1>Справка</h1>
+  <div class="sub">Чаши и методология забивки</div>
+  <div class="sec-title">Типы чаш</div>
+  <div id="bowlBox"></div>
+  <div class="sec-title">Частые вопросы</div>
+  <div id="tipsBox"></div>
+</div>
+
 <div class="tabbar">
   <button class="tab on" data-tab="home"><span class="ti">🎯</span>Подбор</button>
-  <button class="tab" data-tab="search"><span class="ti">🔍</span>По табаку</button>
+  <button class="tab" data-tab="search"><span class="ti">🔍</span>По&nbsp;табаку</button>
   <button class="tab" data-tab="fav"><span class="ti">⭐</span>Избранное</button>
+  <button class="tab" data-tab="guide"><span class="ti">📖</span>Справка</button>
 </div>
 
 <script src="mixes.js"></script>
@@ -213,7 +248,7 @@
       + '<div style="flex:1;min-width:0">'
         + '<div class="n">'+esc(m.name)+'</div>'
         + '<div class="s">'+esc(m.short)+'</div>'
-        + '<div class="chips">'+ m.tags.map(function(t){return '<span class="chip">'+esc(t)+'</span>';}).join("") +'</div>'
+        + '<div class="chips"><span class="chip time">⏱ '+esc(m.duration||"")+'</span>'+ m.tags.map(function(t){return '<span class="chip">'+esc(t)+'</span>';}).join("") +'</div>'
       + '</div>'
       + '<span class="fav'+(isFav?' on':'')+'" data-fav="'+m.id+'">'+(isFav?'★':'☆')+'</span>'
       + '</div>';
@@ -289,12 +324,14 @@
         + m.tags.map(function(t){return '<span class="chip">'+esc(t)+'</span>';}).join("")
       + '</div>'
       + '<div class="card" style="line-height:1.55">'+esc(m.desc)+'</div>'
+      + '<div class="dur"><span class="dur-ic">⏱</span><div><div class="dur-lbl">Курится примерно</div><div class="dur-val">'+esc(m.duration||"—")+'</div></div></div>'
       + '<div class="sec-title" style="margin-top:18px">Состав и пропорции</div>'
       + '<div class="card">'+bar+rows+'</div>'
       + '<div class="sec-title">Как забивать</div>'
       + '<div class="card">'
         + '<div class="kv"><b>Чаша</b><span>'+esc(m.bowl)+'</span></div>'
         + '<div class="kv"><b>Жар</b><span>'+esc(m.heat)+'</span></div>'
+        + '<div class="kv"><b>Время</b><span>'+esc(m.duration||"—")+'</span></div>'
         + '<div class="kv"><b>Совет</b><span>'+esc(m.note)+'</span></div>'
       + '</div>';
 
@@ -373,14 +410,64 @@
   $("brandFilter").addEventListener("input", showSearch);
   stock = load("hk_stock", {});
 
+  // ---------- guide / справка ----------
+  var guideBuilt = false;
+  function showGuide(){
+    if(guideBuilt) return;
+    var bowls = window.BOWLS || [];
+    $("bowlBox").innerHTML = bowls.map(function(b,i){
+      var head = b.img
+        ? '<span class="thumb">'+b.img+'</span>'
+        : '<span class="ae">'+b.emoji+'</span>';
+      var pic = b.img
+        ? '<div class="bowl-img">'+b.img+'<div class="cap">схема · вид в разрезе</div></div>'
+        : '';
+      return '<div class="acc" data-acc>'
+        + '<div class="acc-h">'+head
+          + '<div><div class="an">'+esc(b.name)+'</div><div class="at">'+esc(b.tag)+'</div></div>'
+          + '<span class="arr">▶</span></div>'
+        + '<div class="acc-b"><div class="acc-b-in">'
+          + pic
+          + '<div class="kv"><b>Для чего</b><span>'+esc(b.forWhat)+'</span></div>'
+          + '<div class="kv"><b>Забивка</b><span>'+esc(b.pack)+'</span></div>'
+          + '<div class="kv"><b>Жар</b><span>'+esc(b.heat)+'</span></div>'
+          + '<div class="kv"><b>Совет</b><span>'+esc(b.tip)+'</span></div>'
+        + '</div></div></div>';
+    }).join("");
+
+    var tips = window.TIPS || [];
+    $("tipsBox").innerHTML = tips.map(function(t){
+      return '<div class="acc" data-acc>'
+        + '<div class="acc-h"><span class="ae">💬</span>'
+          + '<div><div class="an">'+esc(t.q)+'</div></div>'
+          + '<span class="arr">▶</span></div>'
+        + '<div class="acc-b"><div class="acc-b-in" style="padding-top:0">'
+          + '<div style="color:#c9ccd3;line-height:1.5">'+esc(t.a)+'</div>'
+        + '</div></div></div>';
+    }).join("");
+
+    function bindAcc(box){
+      box.addEventListener("click", function(e){
+        var h = e.target.closest(".acc-h"); if(!h) return;
+        var acc = h.parentElement; haptic();
+        var body = acc.querySelector(".acc-b");
+        var isOpen = acc.classList.contains("open");
+        if(isOpen){ acc.classList.remove("open"); body.style.maxHeight = "0"; }
+        else { acc.classList.add("open"); body.style.maxHeight = body.firstElementChild.scrollHeight + 20 + "px"; }
+      });
+    }
+    bindAcc($("bowlBox")); bindAcc($("tipsBox"));
+    guideBuilt = true;
+  }
+
   // ---------- navigation ----------
-  var VIEWS = ["home","list","detail","fav","search"];
+  var VIEWS = ["home","list","detail","fav","search","guide"];
   function go(v){
     view = v;
     VIEWS.forEach(function(x){ $("v-"+x).classList.toggle("hidden", x !== v); });
     window.scrollTo(0,0);
     if(tg && tg.BackButton){
-      if(v === "home" || v === "fav" || v === "search") tg.BackButton.hide();
+      if(v === "home" || v === "fav" || v === "search" || v === "guide") tg.BackButton.hide();
       else tg.BackButton.show();
     }
     document.querySelectorAll(".tab").forEach(function(t){
@@ -421,6 +508,7 @@
       var v = t.dataset.tab;
       if(v === "fav") showFav();
       if(v === "search") showSearch();
+      if(v === "guide") showGuide();
       go(v);
     };
   });
